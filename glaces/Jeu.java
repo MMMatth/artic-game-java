@@ -15,37 +15,47 @@ public class Jeu {
         image = new ArcticImage(ocean.getWidth(), ocean.getHeight()); // on cree l'image
         poissons = new ArrayList<Poisson>();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 3; i++) {
             poissons.add(new Poisson(ocean.getWidth() - 1, ocean.getHeight() - 1, 5, 10));
         }
 
         image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs
     }
 
+
+    public void updatePingouin(Scanner scanner) {
+        System.out.println("Deplacez le pingouin avec les touches zqsd (ou tapez une autre touche pour quitter) :");
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("z")) { // ingore case dans le cas de la maj
+            deplacerPingouin(0, 14);
+        } else if (input.equalsIgnoreCase("q")) {
+            deplacerPingouin(-14, 0);
+        } else if (input.equalsIgnoreCase("s")) {
+            deplacerPingouin(0, -14);
+        } else if (input.equalsIgnoreCase("d")) {
+            deplacerPingouin(14, 0);
+        }
+    }
+
+    public void updatePoisson() {
+        for (int i = 0; i < poissons.size(); i++) {
+            poissons.get(i).deplacer(7, ocean.getWidth(), ocean.getHeight());
+            if (poissons.get(i).estMange(pingouin) && !poissons.get(i).estEnDessousIceBerg(ocean.getIcebergs())) {
+                poissons.remove(i);
+            }
+        }
+    }
+
     public void jouer() {
         Scanner scanner = new Scanner(System.in);
-        while (true) {
-            
-            System.out.println("Deplacez le pingouin avec les touches zqsd (ou tapez une autre touche pour quitter) :");
-            String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("z")) { // ingore case dans le cas de la maj
-                deplacerPingouin(0, 7);
-            } else if (input.equalsIgnoreCase("q")) {
-                deplacerPingouin(-7, 0);
-            } else if (input.equalsIgnoreCase("s")) {
-                deplacerPingouin(0, -7);
-            } else if (input.equalsIgnoreCase("d")) {
-                deplacerPingouin(7, 0);
-            } else {
-                break;
-            }
-            for (int i = 0; i < poissons.size(); i++) {
-                if (poissons.get(i).estMange(pingouin) && ) {
-                    poissons.remove(i);
-                }
-            }
+
+        while (poissons.size() > 0) {
+            updatePingouin(scanner);
+            updatePoisson();
             image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons));
         }
+        System.out.println("Vous avez gagné !");
+        image.fermer();
     }
     /**
      * Deplace le pingouin de dx et dy (en gerant les limites de l'ocean)

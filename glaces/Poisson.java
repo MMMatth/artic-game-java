@@ -76,6 +76,17 @@ public class Poisson {
         return false;
     }
 
+    public boolean estEnDessousIceBerg(Iceberg2D[] Icebergs)
+    {
+        for (Iceberg2D iceberg : Icebergs) {
+            if (iceberg.coinEnBasAGauche().getAbscisse() < x + largeur && iceberg.coinEnHautADroite().getAbscisse() > x && iceberg.coinEnBasAGauche().getOrdonnee() < y + hauteur && iceberg.coinEnHautADroite().getOrdonnee() > y) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int getX() {
         return x;
     }
