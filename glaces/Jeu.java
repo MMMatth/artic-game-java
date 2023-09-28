@@ -15,8 +15,9 @@ public class Jeu {
         image = new ArcticImage(ocean.getWidth(), ocean.getHeight()); // on cree l'image
         poissons = new ArrayList<Poisson>();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             poissons.add(new Poisson(ocean.getWidth() - 1, ocean.getHeight() - 1, 5, 10));
+            poissons.get(i).refreshPosPoisson(0); // on remet les poissons dans l'ocean
         }
 
         image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs

@@ -16,8 +16,8 @@ public class Poisson {
     private int mapWidth;
 
     public Poisson(int mapHeight, int mapWidth, int largeur, int hauteur) {
-        this.x = new Random().nextInt(mapWidth - 1);
-        this.y = new Random().nextInt(mapHeight- 1);
+        this.x = new Random().nextInt(mapWidth - 2) + 1; // on genere un nombre entre 1 et mapWidth - 1 pour eviter que le poisson soit en dehors de l'ocean (out of bounds)
+        this.y = new Random().nextInt(mapHeight- 2) + 1;
         this.largeur = largeur;
         this.hauteur = hauteur;
         this.mapHeight = mapHeight;
@@ -36,12 +36,20 @@ public class Poisson {
                 {
                     y = 0;
                 }
+                if (y < 0)
+                {
+                    y = mapHeight - hauteur;
+                }
             }
         else
             {            
                 if (x + (hauteur + vitesse) >= mapWidth)
                 {
                     x = 0;
+                }
+                if (x < 0)
+                {
+                    x = mapWidth - largeur;
                 }
             }
         
