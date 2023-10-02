@@ -1,5 +1,6 @@
 package glaces;
 
+
 public class Pingouin {
     private int x;
     private int y;
@@ -24,6 +25,17 @@ public class Pingouin {
         if (fatigue == 8){
             couleur = 2;
             vitesse = vitesseFatigue;
+        }
+    }
+
+    public boolean estSurIceberg(Iceberg2D iceberg){
+        if (iceberg.coinEnBasAGauche().getAbscisse() < x + taille && iceberg.coinEnHautADroite().getAbscisse() > x
+            && iceberg.coinEnBasAGauche().getOrdonnee() < y + taille
+            && iceberg.coinEnHautADroite().getOrdonnee() > y) 
+        {
+            return true;
+        }else{
+            return false;
         }
     }
 

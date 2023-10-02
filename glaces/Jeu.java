@@ -2,6 +2,9 @@ package glaces;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Iterator;
+
 
 public class Jeu {
     private ArcticImage image;
@@ -14,10 +17,15 @@ public class Jeu {
         pingouin = new Pingouin(30, 30, 14, 14); // on met le pingouin au milieu
         image = new ArcticImage(ocean.getWidth(), ocean.getHeight()); // on cree l'image
         poissons = new ArrayList<Poisson>();
-
+        Random random = new Random();
         for (int i = 0; i < 5; i++) {
-            poissons.add(new Poisson(ocean.getWidth() - 1, ocean.getHeight() - 1, 5, 10));
-            poissons.get(i).refreshPosPoisson(0); // on remet les poissons dans l'ocean
+            poissons.add(new Poisson(5, 10, random.nextInt(2), // direction = 0 ou 1
+            random.nextInt(2) + 4, // couleur = entre 4 et 5
+            random.nextInt(3) + 1, // nombre aller retoure avant de mourir = entre 1 et 3
+            random.nextInt(ocean.getWidth() - 5),
+            random.nextInt(ocean.getHeight() - 10),
+            7));
+            updatePoisson(); // on met les poissons a leur place
         }
 
         image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs
@@ -25,15 +33,26 @@ public class Jeu {
 
 
     public void updatePingouin(Scanner scanner) {
+        for (Iceberg2D iceberg : ocean.getIcebergs()) {
+            if (pingouin.estSurIceberg(iceberg)){
+                pingouin.estRepose();
+                System.out.println("Le pingouin est sur un iceberg");
+            }
+        }
+
         System.out.println("Deplacez le pingouin avec les touches zqsd (ou tapez une autre touche pour quitter) :");
         String input = scanner.nextLine();
-        if (input.equalsIgnoreCase("z")) { // ingore case dans le cas de la maj
+        if (input.equalsIgnoreCase("z")) 
+        { // ingore case dans le cas de la maj
             deplacerPingouin(0, 1);
-        } else if (input.equalsIgnoreCase("q")) {
+        } else if (input.equalsIgnoreCase("q")) 
+        {
             deplacerPingouin(-1, 0);
-        } else if (input.equalsIgnoreCase("s")) {
+        } else if (input.equalsIgnoreCase("s")) 
+        {
             deplacerPingouin(0, -1);
-        } else if (input.equalsIgnoreCase("d")) {
+        } else if (input.equalsIgnoreCase("d")) 
+        {
             deplacerPingouin(1, 0);
         }
         pingouin.estFatigue(); // on verifie si le pingouin est fatigue et on change sa couleur si c'est le cas
@@ -41,26 +60,68 @@ public class Jeu {
 
     public void updatePoisson() {
         for (int i = 0; i < poissons.size(); i++) {
-            poissons.get(i).deplacer(7, ocean.getWidth(), ocean.getHeight());
-            if (poissons.get(i).estMange(pingouin) && !poissons.get(i).estEnDessousIceBerg(ocean.getIcebergs())) // si le poisson est mange
-            {
-                pingouin.estRepose();
-            }
-            if (poissons.get(i).estMange(pingouin) && !poissons.get(i).estEnDessousIceBerg(ocean.getIcebergs()) || poissons.get(i).estMort()) // si le poisson est mange ou mort
-            {
-                poissons.remove(i);
+            Poisson poisson = poissons.get(i);
+            poisson.deplacer();
+
+            if (poisson.getDirection() == 1){                
+                if (poisson.getX() + (poisson.getHauteur() + poisson.getVitesse()) >= ocean.getWidth()) 
+                {
+                    poisson.setX(0);
+                    poisson.perdVie();
+                }
+                if (poisson.getX() < 0) 
+                {
+                    poisson.setX(ocean.getWidth() - poisson.getLargeur());
+                    poisson.perdVie();
+                }
+            } else {
+                if (poisson.getY() + (poisson.getHauteur() + poisson.getVitesse()) >= ocean.getHeight()) 
+                {
+                    poisson.setY(0);
+                    poisson.perdVie();
+                }
+                if (poisson.getY() < 0) 
+                {
+                    poisson.setY(ocean.getHeight() - poisson.getHauteur());
+                    poisson.perdVie();
+                }
             }
 
+            if (poisson.estMange(pingouin)) {
+                for (Iceberg2D iceberg : ocean.getIcebergs()){
+                    if (!poisson.estEnDessousIceBerg(iceberg)){
+                        poisson.meurt();
+                    }
+                }
+            }
+
+            if (poisson.estMort()) {
+                poissons.remove(i);
+                i--;
+            }
         }
     }
+
+    public void updateIceBerg(){
+        Random random = new Random(); 
+        for (Iceberg2D Iceberg : ocean.getIcebergs()) {
+            if (random.nextInt(10) == 0) { 
+                Iceberg.fondre(0.2);
+            }
+        }
+    }
+
 
     public void jouer() {
         Scanner scanner = new Scanner(System.in);
 
         while (poissons.size() > 0) {
             updatePingouin(scanner);
+            updateIceBerg();
             updatePoisson();
-            image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons));
+            if (poissons.size() > 0){
+                image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons));
+            }
         }
         System.out.println("Vous avez gagné !");
         image.fermer();
