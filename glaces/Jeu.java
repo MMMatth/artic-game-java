@@ -12,10 +12,22 @@ public class Jeu {
     private Pingouin pingouin;
     private ArrayList<Poisson> poissons;
 
+    /** 
+     * Constructeur
+     */
     public Jeu() {
         ocean = new Ocean();
         pingouin = new Pingouin(30, 30, 14, 14); // on met le pingouin au milieu
         image = new ArcticImage(ocean.getWidth(), ocean.getHeight()); // on cree l'image
+        poissons = InitPoissons(); // on cree les poissons
+        image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs
+    }
+
+    /**
+     * Initialise les poissons
+     * @return liste des poissons
+     */
+    public ArrayList<Poisson> InitPoissons(){
         poissons = new ArrayList<Poisson>();
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
@@ -28,11 +40,13 @@ public class Jeu {
             7));
         }
         updatePoisson(); // on met les poissons a leur place
-
-        image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs
+        return poissons;
     }
 
-
+    /**
+     * Deplace le pingouin en fonction de l'input de l'utilisateur
+     * @param scanner scanner pour recuperer l'input
+     */
     public void updatePingouin(Scanner scanner) {
         
         for (Iceberg2D iceberg : ocean.getIcebergs()) {
@@ -46,7 +60,6 @@ public class Jeu {
                 }
             }
         }
-
         System.out.println("Deplacez le pingouin avec les touches zqsd (ou tapez une autre touche pour quitter) :");
         String input = scanner.nextLine();
         if (input.equalsIgnoreCase("z")) 
@@ -65,11 +78,13 @@ public class Jeu {
         pingouin.estFatigue(); // on verifie si le pingouin est fatigue et on change sa couleur si c'est le cas
     }
 
+    /**
+     * Deplace les poissons et les supprime si ils sont morts
+     */
     public void updatePoisson() {
         for (int i = 0; i < poissons.size(); i++) {
             Poisson poisson = poissons.get(i);
             poisson.deplacer();
-
             if (poisson.getDirection() == 1){                
                 if (poisson.getX() + (poisson.getHauteur() + poisson.getVitesse()) >= ocean.getWidth()) 
                 {
@@ -93,7 +108,6 @@ public class Jeu {
                     poisson.perdVie();
                 }
             }
-
             if (poisson.estMange(pingouin)) {
                 for (Iceberg2D iceberg : ocean.getIcebergs()){
                     if (!poisson.estEnDessousIceBerg(iceberg)){
@@ -102,7 +116,6 @@ public class Jeu {
                     }
                 }
             }
-
             if (poisson.estMort()) {
                 poissons.remove(i);
                 i--;
@@ -110,16 +123,20 @@ public class Jeu {
         }
     }
 
+    /**
+     * Fait fondre un iceberg aleatoirement
+     */
     public void updateIceBerg(){
         Random random = new Random();
         if (random.nextInt(20) == 0)
             ocean.fondreOcean(0.2);
     }
 
-
+    /**
+     * Boucle principale du jeu
+     */
     public void jouer() {
         Scanner scanner = new Scanner(System.in);
-
         while (poissons.size() > 0) {
             updatePingouin(scanner);
             updateIceBerg();
@@ -128,9 +145,10 @@ public class Jeu {
                 image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons));
             }
         }
-        System.out.println("Vous avez gagné !");
+        System.out.println("Vous avez gagne !");
         image.fermer();
     }
+
     /**
      * Deplace le pingouin de dx et dy (en gerant les limites de l'ocean)
      * @param dx
@@ -148,6 +166,15 @@ public class Jeu {
         }
     }
 
+    /**
+     * Cree la carte avec les couleurs des poissons, du pingouin et des icebergs
+     * @param mapWidth
+     * @param mapHeight
+     * @param ocean
+     * @param pingouin
+     * @param poissons
+     * @return
+     */
     private int[][] creeCarte(int mapWidth, int mapHeight, Ocean ocean, Pingouin pingouin, ArrayList<Poisson> poissons) {
         int[][] carte = new int[mapWidth][mapHeight];
         ajouterPoissons(carte, poissons);
@@ -156,6 +183,11 @@ public class Jeu {
         return carte;
     }
 
+    /**
+     * Ajoute les icebergs a la carte
+     * @param carte tableau de couleurs
+     * @param ocean ocean
+     */
     private void ajouterIceberg(int[][] carte, Ocean ocean) {
         for (Iceberg2D iceberg : ocean.getIcebergs()) {
             int x1 = (int) iceberg.coinEnBasAGauche().getAbscisse();
@@ -170,6 +202,11 @@ public class Jeu {
         }
     }
 
+    /**
+     * Ajoute le pingouin a la carte
+     * @param carte tableau de couleurs
+     * @param pingouin
+     */
     private void ajouterPingouin(int[][] carte, Pingouin pingouin) {
         for (int i = pingouin.getX(); i < pingouin.getX() + pingouin.getTaille(); i++) {
             for (int j = pingouin.getY(); j < pingouin.getY() + pingouin.getTaille(); j++) {
@@ -178,6 +215,11 @@ public class Jeu {
         }
     }
 
+    /**
+     * Ajoute les poissons a la carte
+     * @param carte tableau de couleurs
+     * @param poissons
+     */
     private void ajouterPoissons(int[][] carte, ArrayList<Poisson> poissons) {
         for (Poisson poisson : poissons) {
             if (poisson.getDirection() == 0) // horizontal
