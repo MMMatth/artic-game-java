@@ -131,10 +131,10 @@ public class Iceberg2D {
 
     /**
      * Réduction dans les quatre directions ; le centre ne bouge pas
-     * @param fr dans ]0..1[ facteur de réduction
+     * @param fr dans ]0..1] facteur de réduction si fr = 1 : l'iceberg disparaît
      */
     public void fondre(double fr) {
-        if (fr > 0 && fr < 1) {
+        if (fr > 0 && fr <= 1) {
             double largeur = this.largeur() * fr;
             double hauteur = this.hauteur() * fr;
             double absBasGauche = this.enBasAGauche.getAbscisse() + largeur / 2;

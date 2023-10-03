@@ -18,25 +18,32 @@ public class Jeu {
         image = new ArcticImage(ocean.getWidth(), ocean.getHeight()); // on cree l'image
         poissons = new ArrayList<Poisson>();
         Random random = new Random();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
+            random = new Random();
             poissons.add(new Poisson(5, 10, random.nextInt(2), // direction = 0 ou 1
             random.nextInt(2) + 4, // couleur = entre 4 et 5
             random.nextInt(3) + 1, // nombre aller retoure avant de mourir = entre 1 et 3
             random.nextInt(ocean.getWidth() - 5),
             random.nextInt(ocean.getHeight() - 10),
             7));
-            updatePoisson(); // on met les poissons a leur place
         }
+        updatePoisson(); // on met les poissons a leur place
 
         image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs
     }
 
 
     public void updatePingouin(Scanner scanner) {
+        
         for (Iceberg2D iceberg : ocean.getIcebergs()) {
             if (pingouin.estSurIceberg(iceberg)){
                 pingouin.estRepose();
-                System.out.println("Le pingouin est sur un iceberg");
+                // on verifie si l'iceberg est assez grand pour supporter le pingouin
+                if (iceberg.largeur() < pingouin.getTaille() * 2 || iceberg.hauteur()  < pingouin.getTaille() * 2)
+                {
+                    iceberg.fondre(1);
+                    System.out.println("L'iceberg a casser sous le pingouin");
+                }
             }
         }
 
@@ -91,6 +98,7 @@ public class Jeu {
                 for (Iceberg2D iceberg : ocean.getIcebergs()){
                     if (!poisson.estEnDessousIceBerg(iceberg)){
                         poisson.meurt();
+                        pingouin.estRepose();
                     }
                 }
             }
@@ -103,12 +111,9 @@ public class Jeu {
     }
 
     public void updateIceBerg(){
-        Random random = new Random(); 
-        for (Iceberg2D Iceberg : ocean.getIcebergs()) {
-            if (random.nextInt(10) == 0) { 
-                Iceberg.fondre(0.2);
-            }
-        }
+        Random random = new Random();
+        if (random.nextInt(20) == 0)
+            ocean.fondreOcean(0.2);
     }
 
 
