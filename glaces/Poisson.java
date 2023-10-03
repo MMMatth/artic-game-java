@@ -68,6 +68,14 @@ public class Poisson {
     }
 
     /**
+     * Retourne le nombre de vie du poisson
+     * @return nombre de vie du poisson
+     */
+    public int getViePoisson() {
+        return viePoisson;
+    }
+
+    /**
      * Fait mourir le poisson
      */
     public void meurt() {
@@ -167,5 +175,14 @@ public class Poisson {
      */
     public int getVitesse() {
         return viePoisson;
+    }
+
+    /**
+     * Fonction toString
+     * @return String
+     */
+    public String toString() {
+        return "Poisson [x=" + x + ", y=" + y + ", largeur=" + largeur + ", hauteur=" + hauteur + ", direction="
+                + direction + ", couleurs=" + couleurs + ", viePoisson=" + viePoisson + ", vitesse=" + vitesse + "]";
     }
 }

@@ -21,14 +21,11 @@ public class Pingouin {
     }
 
     /**
-     * Teste si le pingouin est fatigué et change sa couleur et sa vitesse si c'est le cas
+     * Met le pingouin en état de fatigue (change la couleur et la vitesse)
      */
     public void estFatigue(){
-        System.out.println(fatigue);
-        if (fatigue == 8){
-            couleur = 2;
-            vitesse = vitesseFatigue;
-        }
+        couleur = 2;
+        vitesse = vitesseFatigue;
     }
 
     /**
@@ -58,8 +55,8 @@ public class Pingouin {
 
     /**
      * Deplace le pingouin en fonction de dx et dy
-     * @param dx
-     * @param dy
+     * @param dx 1 si on va à droite, -1 si on va à gauche
+     * @param dy 1 si on va en haut, -1 si on va en bas
      */
     public void deplacer(int dx, int dy) {
         x += dx * vitesse;
@@ -105,5 +102,22 @@ public class Pingouin {
      */
     public int getVitesse() {
         return vitesse;
+    }
+
+    /**
+     * Retourne la fatigue du pingouin
+     * @return fatigue du pingouin
+     */
+    public int getFatigue() {
+        return fatigue;
+    }
+
+    /**
+     * Fontion toString
+     * @return String
+     */
+    public String toString() {
+        return "Pingouin [x=" + x + ", y=" + y + ", taille=" + taille + ", vitesse=" + vitesse + ", fatigue=" + fatigue
+                + "]";
     }
 }

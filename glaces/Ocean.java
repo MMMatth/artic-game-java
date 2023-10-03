@@ -29,10 +29,10 @@ public class Ocean {
      */
     public Ocean() {
         
-        this.width = 300;
-        this.height = 300;
+        this.width = 600;
+        this.height = 600;
 
-        this.icebergs = new Iceberg2D[2];
+        this.icebergs = new Iceberg2D[10];
 
         int largeurIceberg, hauteurIceberg, xIceberg, yIceberg;
         for (int i = 0; i < this.icebergs.length ; i++)
@@ -86,5 +86,17 @@ public class Ocean {
      */
     public int getHeight() {
         return this.height;
+    }
+
+    /**
+     * fonction toString
+     * @return string
+     */
+    public String toString() {
+        String str = "Ocean de largeur " + this.width + " et de hauteur " + this.height + "\n";
+        for (Iceberg2D Iceberg : icebergs) {
+            str += Iceberg.toString() + "\n";
+        }
+        return str;
     }
 }

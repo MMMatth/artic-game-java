@@ -17,7 +17,7 @@ public class Jeu {
      */
     public Jeu() {
         ocean = new Ocean();
-        pingouin = new Pingouin(30, 30, 14, 14); // on met le pingouin au milieu
+        pingouin = new Pingouin(30, 30, 14, 28); // on met le pingouin au milieu
         image = new ArcticImage(ocean.getWidth(), ocean.getHeight()); // on cree l'image
         poissons = InitPoissons(); // on cree les poissons
         image.setColors(creeCarte(ocean.getWidth(), ocean.getHeight(), ocean, pingouin, poissons)); // on met les couleurs
@@ -30,14 +30,14 @@ public class Jeu {
     public ArrayList<Poisson> InitPoissons(){
         poissons = new ArrayList<Poisson>();
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 50; i++) {
             random = new Random();
             poissons.add(new Poisson(5, 10, random.nextInt(2), // direction = 0 ou 1
             random.nextInt(2) + 4, // couleur = entre 4 et 5
             random.nextInt(3) + 1, // nombre aller retoure avant de mourir = entre 1 et 3
             random.nextInt(ocean.getWidth() - 5),
             random.nextInt(ocean.getHeight() - 10),
-            7));
+            14));
         }
         updatePoisson(); // on met les poissons a leur place
         return poissons;
@@ -75,7 +75,8 @@ public class Jeu {
         {
             deplacerPingouin(1, 0);
         }
-        pingouin.estFatigue(); // on verifie si le pingouin est fatigue et on change sa couleur si c'est le cas
+        if (pingouin.getFatigue() == 8)
+            pingouin.estFatigue(); 
     }
 
     /**
