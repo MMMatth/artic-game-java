@@ -11,7 +11,7 @@ public class TestOcean {
         testGetIcebergs();
         testGetIceberg();
         testFondreOcean();
-
+        testToSting();
     }
 
     static private void testCreator() {
@@ -66,4 +66,9 @@ public class TestOcean {
             && ocean.getIceberg(1).coinEnHautADroite().getOrdonnee() == 275) : "testFondreOcean: Problème avec iceberg2";
     }
 
+    static private void testToSting(){
+        Iceberg2D[] icebergs = {};
+        Ocean ocean = new Ocean(300, 300, icebergs);
+        assert (ocean.toString().equals("Ocean [ width = 300, height = 300 ]\n")) : "testToString: Problème avec toString";
+    }
 }

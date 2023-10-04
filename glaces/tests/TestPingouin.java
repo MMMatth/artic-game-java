@@ -16,6 +16,7 @@ public class TestPingouin {
         testEstFatigue();
         testEstSurIceberg();
         testEstRepose();
+        testToSting();
     }
 
     static private void testCreator(){
@@ -72,5 +73,10 @@ public class TestPingouin {
     static private void testGetTaille() {
         Pingouin pingouin = new Pingouin(0, 0, 2, 5);
         assert(pingouin.getTaille() == 2) : "GetTaille n'a pas renvoyé la bonne taille";
+    }
+
+    static private void testToSting() {
+        Pingouin pingouin = new Pingouin(0, 0, 2, 5);
+        assert(pingouin.toString().equals("Pingouin [x=0, y=0, taille=2, vitesse=5, fatigue=0]")) : "ToString n'a pas renvoyé la bonne chaine";
     }
 }

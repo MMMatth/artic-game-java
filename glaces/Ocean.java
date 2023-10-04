@@ -93,7 +93,7 @@ public class Ocean {
      * @return string
      */
     public String toString() {
-        String str = "Ocean de largeur " + this.width + " et de hauteur " + this.height + "\n";
+        String str = "Ocean [ width = " + this.width + ", height = " + this.height + " ]\n";
         for (Iceberg2D Iceberg : icebergs) {
             str += Iceberg.toString() + "\n";
         }

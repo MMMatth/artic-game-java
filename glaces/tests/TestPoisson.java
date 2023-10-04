@@ -21,6 +21,7 @@ public class TestPoisson {
         testGetCouleurs();
         testGetVitesse();
         testGetViePoisson();
+        testToSting();
     }
 
     static private void testDeplacer() {
@@ -104,6 +105,11 @@ public class TestPoisson {
     static private void testGetViePoisson(){
         Poisson poisson = new Poisson(2, 3, 1, 5, 10, 2, 3, 1);
         assert (poisson.getViePoisson() == 10) : "GetViePoisson n'a pas renvoyé la bonne vie";
+    }
+
+    static private void testToSting(){
+        Poisson poisson = new Poisson(2, 3, 1, 5, 10, 2, 3, 1);
+        assert (poisson.toString().equals("Poisson [x=2, y=3, largeur=2, hauteur=3, direction=1, couleurs=5, viePoisson=10, vitesse=1]")) : "testToString: Problème avec toString";
     }
 } 
     

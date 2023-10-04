@@ -1,7 +1,5 @@
 package glaces;
 
-import geometrie.Point;
-
 import java.sql.Ref;
 // random
 import java.util.Random;
